@@ -252,6 +252,7 @@ class CmdState {
 
       bool _excerptsChanged     { false };
       bool _instrumentsChanged  { false };
+      bool _lyricsChanged       { false };
 
       void reset();
       UpdateMode updateMode() const { return _updateMode; }
@@ -701,6 +702,7 @@ class Score : public QObject, ScoreElement {
       virtual inline void addLayoutFlags(LayoutFlags);
       virtual inline void setInstrumentsChanged(bool);
       void addRefresh(const QRectF&);
+      virtual inline void setLyricsChanged(bool);
 
       void cmdRelayout();
 
@@ -1223,10 +1225,12 @@ class MasterScore : public Score {
       virtual CmdState& cmdState() override                           { return _cmdState;                     }
       virtual void addLayoutFlags(LayoutFlags val) override           { _cmdState.layoutFlags |= val;         }
       virtual void setInstrumentsChanged(bool val) override           { _cmdState._instrumentsChanged = val;  }
+      virtual void setLyricsChanged(bool val)      override           { _cmdState._lyricsChanged = val; }
 
       void setExcerptsChanged(bool val)                               { _cmdState._excerptsChanged = val;     }
       bool excerptsChanged() const                                    { return _cmdState._excerptsChanged;    }
       bool instrumentsChanged() const                                 { return _cmdState._instrumentsChanged; }
+      bool lyricsChanged() const                                      { return _cmdState._lyricsChanged; }
 
       Revisions* revisions()                                          { return _revisions;                    }
 
@@ -1301,6 +1305,7 @@ inline void Score::setLayout(int tick)                 { _masterScore->setLayout
 inline CmdState& Score::cmdState()                     { return _masterScore->cmdState();        }
 inline void Score::addLayoutFlags(LayoutFlags f)       { _masterScore->addLayoutFlags(f);        }
 inline void Score::setInstrumentsChanged(bool v)       { _masterScore->setInstrumentsChanged(v); }
+inline void Score::setLyricsChanged(bool v)            { _masterScore->setLyricsChanged(v);      }
 inline Movements* Score::movements()                   { return _masterScore->movements();       }
 inline const Movements* Score::movements() const       { return _masterScore->movements();       }
 

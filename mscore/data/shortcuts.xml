@@ -716,6 +716,10 @@
     <seq>P</seq>
     </SC>
   <SC>
+    <key>toggle-lyricseditor</key>
+    <seq>L</seq>
+    </SC>
+  <SC>
     <key>next-score</key>
     <std>20</std>
     </SC>
@@ -1004,4 +1008,3 @@
     </SC>
 
   </Shortcuts>
-
