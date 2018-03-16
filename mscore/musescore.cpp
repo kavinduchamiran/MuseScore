@@ -1694,6 +1694,62 @@ void MuseScore::updateLyricsEditor()
       }
 
 //---------------------------------------------------------
+//   updateLyricsScore
+//---------------------------------------------------------
+
+void MuseScore::updateLyricsScore()
+      {
+      QStringList lyricsSplited;
+
+      if (!_lyricsEditor)
+            return;
+
+      if (cs){
+            //need seperate logic for normal mode. this is for rhythm mode
+          // add indicator for new line + new stave
+            QString lyrics = _lyricsEditor->getLyrics();
+
+            QStringList str  = lyrics.split(QRegExp("\n"));
+
+            for(QString s: str){
+                if(!s.trimmed().isNull()){
+                    QStringList words = s.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+                    for(QString word: words){
+
+                        if(word.contains("-")){
+                            for(QString tmp: word.split("-"))
+                                lyricsSplited.append("#w" + tmp);   // #w is the starting charactor for words
+                            continue;
+                        }
+
+                        if(word.contains("_")){
+                            lyricsSplited.append("#w" + word.left(word.indexOf("_")));  // #w is the starting charactor for words
+                            lyricsSplited.append("#m" + word.mid(word.indexOf("_")));   // #m is the starting charactor for melisma
+
+                            int tmp = word.count("_") - 1;
+                            for(int i = 0; i< tmp; i++)
+                                lyricsSplited.append("#s");
+                            continue;
+                        }
+
+                        if(word == "#n"){
+                            lyricsSplited.append("#n");   // #n is the new line charactor
+                            continue;
+                        }
+
+                        if(!word.isNull()){
+                            lyricsSplited.append("#w" + word);
+                            continue;
+                        }
+                    }
+                }
+            }
+            qDebug() << lyricsSplited;
+            cs->appendLyrics(lyricsSplited);
+      }
+}
+
+//---------------------------------------------------------
 //   appendScore
 //    append score to project list
 //---------------------------------------------------------

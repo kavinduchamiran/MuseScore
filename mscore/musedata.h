@@ -67,4 +67,3 @@ class MuseData {
 
 } // namespace Ms
 #endif
-

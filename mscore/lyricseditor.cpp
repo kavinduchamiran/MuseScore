@@ -65,9 +65,9 @@ void Ms::LyricsEditor::setNormal(){
     le.txtRhythm->hide();
     le.txtNormal->show();
 
-//    SpellChecker sp(this);
-//    sp.setModal(true);
-//    sp.exec();
+    SpellChecker sp(this);
+    sp.setModal(true);
+    sp.exec();
 }
 
 void Ms::LyricsEditor::setRhythm(){
@@ -93,13 +93,13 @@ QString Ms::LyricsEditor::hyphenate(QString word){
     if(db.open()){
         QSqlQuery qry;
 
-        qry.prepare("select hyphenation from dictionary where word = (:word)");
+        qry.prepare("select hyphenation from dictionary where word like (:word)");
 
         qry.bindValue(":word", word);
 
         if(qry.exec()){
             while(qry.next()){
-                QString hypword = qry.value("hyphenation").toString();
+                QString hypword = qry.value("hyphenation").toString();  //need to preserve case sensitivity. add dashes to corresponsing positions
 
                 if(hypword != ""){
                     return hypword;

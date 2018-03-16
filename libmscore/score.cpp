@@ -3894,6 +3894,75 @@ QString Score::extractLyrics()
       }
 
 //---------------------------------------------------------
+//   appendLyrics
+//---------------------------------------------------------
+
+void Score::appendLyrics(QStringList s)
+      {
+        int index = 0;
+        SegmentType st = SegmentType::ChordRest;
+
+        for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
+            for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
+                ChordRest* cr = toChordRest(seg->element(0));
+                std::vector<Lyrics*>& lyric2 = cr->lyrics();
+                for(Lyrics* l2: lyric2){
+                   deleteItem(l2);
+                }
+//                cr->clearLyrics();
+            }
+        }
+        for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
+            for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
+                ChordRest* cr = toChordRest(seg->element(0));
+                if(cr){
+                    if(index < s.length()){
+                        QString word = s.at(index);
+
+                        if(word[1] == "w")
+                            addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
+//                            lastAddedLyric->setSep();
+
+                        if(word == "#s"){           //skip char
+                            index++;
+                            continue;
+                        }
+
+                        if(word == "#n"){           //new line char logic to be implemented
+                            index++;
+                            continue;
+                        }
+
+
+                        if(word[1] == "m"){
+                            int count = word.count("_");
+                            int tick = 0;
+
+                            tick += seg->ticks();
+                            Segment* temp_seg = seg;
+                            while(count > 1){
+                                Segment* next = temp_seg->next(st);
+                                qDebug() << temp_seg->ticks();
+                                tick += temp_seg->ticks();
+                                temp_seg = next;
+                                count--;
+                            }
+
+                            qDebug() << tick;
+                            qDebug() << lastAddedLyric->ticks();
+                            lastAddedLyric->setTicks(tick);
+
+                        }
+                        index++;
+                    }
+//                    update();
+                }
+            }
+        }
+        update();       //updating lyrics on score
+      }
+
+//---------------------------------------------------------
 //   keysig
 //---------------------------------------------------------
 

@@ -26,6 +26,7 @@
 #include "spannermap.h"
 #include "layoutbreak.h"
 #include "property.h"
+#include "musescoreCore.h"
 
 namespace Ms {
 
@@ -395,6 +396,7 @@ class Score : public QObject, ScoreElement {
       ScoreFont* _scoreFont;
       int _pageNumberOffset { 0 };        ///< Offset for page numbers.
 
+      Lyrics* lastAddedLyric;
       UpdateState _updateState;
 
       MeasureBaseList _measures;          // here are the notes
@@ -958,6 +960,7 @@ class Score : public QObject, ScoreElement {
       void setTmpName(const QString& s) { _tmpName = s;         }
       bool processMidiInput();
       Lyrics* addLyrics();
+      void appendLyrics(QStringList s);
       FiguredBass* addFiguredBass();
       void expandVoice(Segment* s, int track);
       void expandVoice();

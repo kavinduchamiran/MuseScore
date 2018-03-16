@@ -754,4 +754,3 @@ Score::FileError importMuseData(MasterScore* score, const QString& name)
       return Score::FileError::FILE_NO_ERROR;
       }
 }
-

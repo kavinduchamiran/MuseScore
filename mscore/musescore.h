@@ -517,6 +517,7 @@ class MuseScore : public QMainWindow, public MuseScoreCore {
       virtual QMenu* createPopupMenu() override;
 
    public slots:
+      void updateLyricsScore();
       virtual void cmd(QAction* a);
       void dirtyChanged(Score*);
       void setPos(int tick);
