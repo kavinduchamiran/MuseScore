@@ -46,7 +46,7 @@ QT5_WRAP_UI (ui_headers
       editpitch.ui editstringdata.ui editraster.ui mediadialog.ui albummanager.ui layer.ui
       omrpanel.ui masterpalette.ui harmonyedit.ui pathlistdialog.ui
       note_groups.ui resourceManager.ui stafftypetemplates.ui
-      startcenter.ui scorePreview.ui scoreBrowser.ui lyricseditor.ui spellchecker.ui
+      startcenter.ui scorePreview.ui scoreBrowser.ui lyricseditor.ui
       logindialog.ui uploadscoredialog.ui breaksdialog.ui
       toolbarEditor.ui
 
@@ -308,6 +308,18 @@ add_executable ( ${ExecutableName}
       inspector/inspectorTextBase.cpp
       inspector/inspectorDynamic.cpp
       inspector/inspectorElementBase.cpp
+
+      hunspell/affentry.cxx
+      hunspell/affixmgr.cxx
+      hunspell/csutil.cxx
+      hunspell/filemgr.cxx
+      hunspell/hashmgr.cxx
+      hunspell/hunspell.cxx
+      hunspell/hunzip.cxx
+      hunspell/phonet.cxx
+      hunspell/replist.cxx
+      hunspell/suggestmgr.cxx
+
       enableplayforwidget.cpp
       editelement.cpp
       qmlplugin.cpp

@@ -110,12 +110,7 @@ void Ms::LyricsEditor::batchHyphenate(){
 }
 
 void Ms::LyricsEditor::checkSpellings(){
-//    SpellChecker sp(this);
-//    sp.setModal(true);
-//    sp.exec();
-
     getBingServer("schoool");
-
 }
 
 void Ms::LyricsEditor::customTextEditMenu(QPoint pos)
