@@ -28,6 +28,8 @@ class LyricsEditor : public QDockWidget {
       QScrollArea* sa;
       Ui::LyricsEditor le;
       QSqlDatabase db;
+      QNetworkAccessManager* nam = new QNetworkAccessManager(this);
+      QStringList wordlist;
 
    public:
       LyricsEditor(MuseScore* parent);
@@ -38,12 +40,15 @@ class LyricsEditor : public QDockWidget {
       QString getSelectedText()           { return le.txtRhythm->textCursor().selectedText(); }
       void connectToDictionary();
       QString hyphenate(QString word);
+      void getBingServer(QString word);
 
 public slots:
       void setNormal();
       void setRhythm();
       void batchHyphenate();
-      void getBingServer();
+      void checkSpellings();
+      void responseReceived(QNetworkReply *reply);
+      void customTextEditMenu(QPoint pos);
 };
 
 } // namespace Ms
