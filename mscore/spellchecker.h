@@ -1,25 +1,11 @@
 #ifndef SPELLCHECKER_H
 #define SPELLCHECKER_H
 
-#include "lyricseditor.h"
 
-
-#include <QDialog>
-
-namespace Ui {
-class SpellChecker;
-}
-
-class SpellChecker : public QDialog
+class SpellChecker
 {
-    Q_OBJECT
-
 public:
-    explicit SpellChecker(QWidget *parent = 0);
-    ~SpellChecker();
-
-private:
-    Ui::SpellChecker *ui;
+    SpellChecker();
 };
 
 #endif // SPELLCHECKER_H
