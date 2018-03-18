@@ -1,5 +1,5 @@
 #include "lyricseditor.h"
-#include "spellchecker.h"
+
 
 namespace Ms {
 

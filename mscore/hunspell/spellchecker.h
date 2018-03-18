@@ -1,6 +1,13 @@
 #ifndef SPELLCHECKER_H
 #define SPELLCHECKER_H
 
+#if defined(near)
+#undef near
+#endif
+
+
+
+
 class Hunspell;
 
 class SpellChecker

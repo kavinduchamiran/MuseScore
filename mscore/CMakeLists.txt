@@ -249,7 +249,7 @@ add_executable ( ${ExecutableName}
       musescore.cpp navigator.cpp pagesettings.cpp palette.cpp
       timeline.cpp
       mixer.cpp playpanel.cpp selectionwindow.cpp preferences.cpp measureproperties.cpp
-      seq.cpp textpalette.cpp lyricseditor.cpp spellchecker.cpp
+      seq.cpp textpalette.cpp lyricseditor.cpp hunspell/spellchecker.cpp
       timedialog.cpp symboldialog.cpp shortcutcapturedialog.cpp
       simplebutton.cpp musedata.cpp
       editdrumset.cpp editstaff.cpp
@@ -280,6 +280,7 @@ add_executable ( ${ExecutableName}
       masterpalette.cpp
       dragdrop.cpp
       waveview.cpp helpBrowser.cpp
+
       inspector/inspector.cpp
       inspector/inspectorBase.cpp
       inspector/inspectorBeam.cpp
@@ -309,16 +310,25 @@ add_executable ( ${ExecutableName}
       inspector/inspectorDynamic.cpp
       inspector/inspectorElementBase.cpp
 
-      hunspell/affentry.cxx
-      hunspell/affixmgr.cxx
-      hunspell/csutil.cxx
-      hunspell/filemgr.cxx
-      hunspell/hashmgr.cxx
-      hunspell/hunspell.cxx
-      hunspell/hunzip.cxx
-      hunspell/phonet.cxx
-      hunspell/replist.cxx
-      hunspell/suggestmgr.cxx
+#        hunspell/affentry.hxx
+#        hunspell/affixmgr.hxx
+#        hunspell/atypes.hxx
+#        hunspell/baseaffix.hxx
+#        hunspell/csutil.hxx
+#        hunspell/filemgr.hxx
+#        hunspell/hashmgr.hxx
+#        hunspell/htypes.hxx
+#        hunspell/hunspell.h
+#        hunspell/hunspell.hxx
+#        hunspell/hunvisapi.h
+#        hunspell/hunzip.hxx
+#        hunspell/langnum.hxx
+#        hunspell/phonet.hxx
+#        hunspell/replist.hxx
+#        hunspell/suggestmgr.hxx
+#        hunspell/utf_info.hxx
+#        hunspell/w_char.hxx
+
 
       enableplayforwidget.cpp
       editelement.cpp

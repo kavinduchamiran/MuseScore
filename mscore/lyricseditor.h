@@ -5,7 +5,7 @@
 #include "libmscore/musescoreCore.h"
 #include "musescore.h"
 
-#include "spellchecker.h"
+
 
 #include <QtSql/QtSql>
 #include <QtSql/QSqlDatabase>
