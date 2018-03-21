@@ -114,7 +114,8 @@ void Ms::LyricsEditor::checkSpellings(){
 //    sp.setModal(true);
 //    sp.exec();
 
-    getBingServer("schoool");
+//    getBingServer("schoool");
+
 
 }
 

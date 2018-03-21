@@ -231,7 +231,7 @@ void MeasureBaseList::change(MeasureBase* ob, MeasureBase* nb)
       if (ob == _first)
             _first = nb;
       if (nb->type() == ElementType::HBOX || nb->type() == ElementType::VBOX
-         || nb->type() == ElementType::TBOX || nb->type() == ElementType::FBOX)
+          || nb->type() == ElementType::TBOX || nb->type() == ElementType::FBOX)
             nb->setSystem(ob->system());
       foreach(Element* e, nb->el())
             e->setParent(nb);
@@ -242,7 +242,7 @@ void MeasureBaseList::change(MeasureBase* ob, MeasureBase* nb)
 //---------------------------------------------------------
 
 Score::Score()
-   : ScoreElement(this), _is(this), _selection(this), _selectionFilter(this)
+      : ScoreElement(this), _is(this), _selection(this), _selectionFilter(this)
       {
       _masterScore = 0;
       Layer l;
@@ -258,12 +258,12 @@ Score::Score()
       _pos[int(POS::RIGHT)]   = 0;
       _fileDivision           = MScore::division;
       _style  = MScore::defaultStyle();
-//      accInfo = tr("No selection");     // ??
+      //      accInfo = tr("No selection");     // ??
       accInfo = "No selection";
       }
 
 Score::Score(MasterScore* parent)
-   : Score{}
+      : Score{}
       {
       _masterScore = parent;
       if (MScore::defaultStyleForParts())
@@ -284,7 +284,7 @@ Score::Score(MasterScore* parent)
                   StyleIdx::pageOddBottomMargin,
                   StyleIdx::pageTwosided,
                   StyleIdx::spatium
-                  };
+            };
             // but borrow defaultStyle page layout settings
             for (auto i : styles)
                   _style.set(i, MScore::defaultStyle().value(i));
@@ -298,7 +298,7 @@ Score::Score(MasterScore* parent)
       }
 
 Score::Score(MasterScore* parent, const MStyle& s)
-   : Score{parent}
+      : Score{parent}
       {
       _style  = s;
       }
@@ -320,7 +320,7 @@ Score::~Score()
       qDeleteAll(_parts);
       qDeleteAll(_staves);
       qDeleteAll(_systems);
-//      qDeleteAll(_pages);
+      //      qDeleteAll(_pages);
       _masterScore = 0;
       }
 
@@ -741,8 +741,8 @@ void Score::spell()
                         Element* e = s->element(track);
                         if (e && e->type() == ElementType::CHORD)
                               notes.insert(notes.end(),
-                                 toChord(e)->notes().begin(),
-                                 toChord(e)->notes().end());
+                                           toChord(e)->notes().begin(),
+                                           toChord(e)->notes().end());
                         }
                   }
             spellNotelist(notes);
@@ -760,8 +760,8 @@ void Score::spell(int startStaff, int endStaff, Segment* startSegment, Segment* 
                         Element* e = s->element(track);
                         if (e && e->type() == ElementType::CHORD)
                               notes.insert(notes.end(),
-                                 toChord(e)->notes().begin(),
-                                 toChord(e)->notes().end());
+                                           toChord(e)->notes().begin(),
+                                           toChord(e)->notes().end());
                         }
                   }
             spellNotelist(notes);
@@ -1223,7 +1223,7 @@ Measure* Score::getCreateMeasure(int tick)
             while (tick >= lastTick) {
                   Measure* m = new Measure(this);
                   Fraction ts = sigmap()->timesig(lastTick).timesig();
-// qDebug("getCreateMeasure %d  %d/%d", tick, ts.numerator(), ts.denominator());
+                  // qDebug("getCreateMeasure %d  %d/%d", tick, ts.numerator(), ts.denominator());
                   m->setTick(lastTick);
                   m->setTimesig(ts);
                   m->setLen(ts);
@@ -1250,16 +1250,16 @@ void Score::addElement(Element* element)
       Element* parent = element->parent();
       element->triggerLayout();
 
-//      qDebug("Score(%p) Element(%p)(%s) parent %p(%s)",
-//         this, element, element->name(), parent, parent ? parent->name() : "");
+      //      qDebug("Score(%p) Element(%p)(%s) parent %p(%s)",
+      //         this, element, element->name(), parent, parent ? parent->name() : "");
 
       ElementType et = element->type();
       if (et == ElementType::MEASURE
-         || (et == ElementType::HBOX && element->parent()->type() != ElementType::VBOX)
-         || et == ElementType::VBOX
-         || et == ElementType::TBOX
-         || et == ElementType::FBOX
-         ) {
+          || (et == ElementType::HBOX && element->parent()->type() != ElementType::VBOX)
+          || et == ElementType::VBOX
+          || et == ElementType::TBOX
+          || et == ElementType::FBOX
+          ) {
             measures()->add(toMeasureBase(element));
             return;
             }
@@ -1381,8 +1381,8 @@ void Score::removeElement(Element* element)
       Element* parent = element->parent();
       setLayout(element->tick());
 
-//      qDebug("Score(%p) Element(%p)(%s) parent %p(%s)",
-//         this, element, element->name(), parent, parent ? parent->name() : "");
+      //      qDebug("Score(%p) Element(%p)(%s) parent %p(%s)",
+      //         this, element, element->name(), parent, parent ? parent->name() : "");
 
       // special for MEASURE, HBOX, VBOX
       // their parent is not static
@@ -1390,11 +1390,11 @@ void Score::removeElement(Element* element)
       ElementType et = element->type();
 
       if (et == ElementType::MEASURE
-         || (et == ElementType::HBOX && !parent->isVBox())
-         || et == ElementType::VBOX
-         || et == ElementType::TBOX
-         || et == ElementType::FBOX
-            ) {
+          || (et == ElementType::HBOX && !parent->isVBox())
+          || et == ElementType::VBOX
+          || et == ElementType::TBOX
+          || et == ElementType::FBOX
+          ) {
             MeasureBase* mb = toMeasureBase(element);
             measures()->remove(mb);
             System* system = mb->system();
@@ -1403,7 +1403,7 @@ void Score::removeElement(Element* element)
                   auto i = std::find(page->systems().begin(), page->systems().end(), system);
                   page->systems().erase(i);
                   }
-//            setLayout(mb->tick());
+            //            setLayout(mb->tick());
             return;
             }
 
@@ -1438,11 +1438,11 @@ void Score::removeElement(Element* element)
                   if (et == ElementType::TEXTLINE && spanner->anchor() == Spanner::Anchor::NOTE)
                         break;
                   removeSpanner(spanner);
-//TODO: system is not valid anymore after removing measure
-//                  for (SpannerSegment* ss : spanner->spannerSegments()) {
-//                        if (ss->system())
-//                              ss->system()->remove(ss);
-//                        }
+                  //TODO: system is not valid anymore after removing measure
+                  //                  for (SpannerSegment* ss : spanner->spannerSegments()) {
+                  //                        if (ss->system())
+                  //                              ss->system()->remove(ss);
+                  //                        }
                   }
                   break;
 
@@ -1549,9 +1549,9 @@ MeasureBase* Score::firstMM() const
       {
       MeasureBase* m = _measures.first();
       if (m
-         && m->type() == ElementType::MEASURE
-         && styleB(StyleIdx::createMultiMeasureRests)
-         && toMeasure(m)->hasMMRest()) {
+          && m->type() == ElementType::MEASURE
+          && styleB(StyleIdx::createMultiMeasureRests)
+          && toMeasure(m)->hasMMRest()) {
             return toMeasure(m)->mmRest();
             }
       return m;
@@ -1627,8 +1627,8 @@ Segment* Score::firstSegment(SegmentType segType) const
 
 #ifdef SCRIPT_INTERFACE
       // if called from QML/JS, tell QML engine not to garbage collect this object
-//      if (seg)
-//            QQmlEngine::setObjectOwnership(seg, QQmlEngine::CppOwnership);
+      //      if (seg)
+      //            QQmlEngine::setObjectOwnership(seg, QQmlEngine::CppOwnership);
 #endif
       return seg;
       }
@@ -2031,7 +2031,7 @@ bool Score::appendScore(Score* score, bool addPageBreak, bool addSectionBreak)
 
 void Score::splitStaff(int staffIdx, int splitPoint)
       {
-//      qDebug("split staff %d point %d", staffIdx, splitPoint);
+      //      qDebug("split staff %d point %d", staffIdx, splitPoint);
 
       //
       // create second staff
@@ -2427,7 +2427,7 @@ void Score::cmdRemoveStaff(int staffIdx)
                               }
                         }
                   else // linked staff in the same score
-                       sameScoreLinkedStaff = staff;
+                        sameScoreLinkedStaff = staff;
                   }
             if (sameScoreLinkedStaff)
                   s->score()->undo(new UnlinkStaff(sameScoreLinkedStaff, s)); // once should be enough
@@ -2580,27 +2580,27 @@ void Score::padToggle(Pad n)
                   break;
             case Pad::DOTDOT:
                   if ((_is.duration().dots() == 2)
-                     || (_is.duration() == TDuration::DurationType::V_512TH)
-                     || (_is.duration() == TDuration::DurationType::V_1024TH))
+                      || (_is.duration() == TDuration::DurationType::V_512TH)
+                      || (_is.duration() == TDuration::DurationType::V_1024TH))
                         _is.setDots(0);
                   else
                         _is.setDots(2);
                   break;
             case Pad::DOT3:
                   if ((_is.duration().dots() == 3)
-                     || (_is.duration() == TDuration::DurationType::V_256TH)
-                     || (_is.duration() == TDuration::DurationType::V_512TH)
-                     || (_is.duration() == TDuration::DurationType::V_1024TH))
+                      || (_is.duration() == TDuration::DurationType::V_256TH)
+                      || (_is.duration() == TDuration::DurationType::V_512TH)
+                      || (_is.duration() == TDuration::DurationType::V_1024TH))
                         _is.setDots(0);
                   else
                         _is.setDots(3);
                   break;
             case Pad::DOT4:
                   if ((_is.duration().dots() == 4)
-                     || (_is.duration() == TDuration::DurationType::V_128TH)
-                     || (_is.duration() == TDuration::DurationType::V_256TH)
-                     || (_is.duration() == TDuration::DurationType::V_512TH)
-                     || (_is.duration() == TDuration::DurationType::V_1024TH))
+                      || (_is.duration() == TDuration::DurationType::V_128TH)
+                      || (_is.duration() == TDuration::DurationType::V_256TH)
+                      || (_is.duration() == TDuration::DurationType::V_512TH)
+                      || (_is.duration() == TDuration::DurationType::V_1024TH))
                         _is.setDots(0);
                   else
                         _is.setDots(4);
@@ -2704,7 +2704,7 @@ void Score::select(Element* e, SelectType type, int staffIdx)
             }
       if (MScore::debugMode)
             qDebug("select element <%s> type %d(state %d) staff %d",
-               e ? e->name() : "", int(type), int(selection().state()), e ? e->staffIdx() : -1);
+                   e ? e->name() : "", int(type), int(selection().state()), e ? e->staffIdx() : -1);
 
       switch (type) {
             case SelectType::SINGLE:
@@ -2814,9 +2814,9 @@ void Score::selectRange(Element* e, int staffIdx)
             int etick = tick + m->ticks();
             activeTrack = staffIdx * VOICES;
             if (_selection.isNone()
-               || (_selection.isList() && !_selection.isSingle())) {
-                        if (_selection.isList())
-                              deselectAll();
+                || (_selection.isList() && !_selection.isSingle())) {
+                  if (_selection.isList())
+                        deselectAll();
                   _selection.setRange(m->tick2segment(tick),
                                       m == lastMeasure() ? 0 : m->last(),
                                       staffIdx,
@@ -2843,8 +2843,8 @@ void Score::selectRange(Element* e, int staffIdx)
                               startSegment = m->tick2segment(tick);
                               if (etick <= oetick)
                                     endSegment = cr->nextSegmentAfterCR(SegmentType::ChordRest
-                                                                                    | SegmentType::EndBarLine
-                                                                                    | SegmentType::Clef);
+                                                                        | SegmentType::EndBarLine
+                                                                        | SegmentType::Clef);
 
                               }
                         int staffStart = staffIdx;
@@ -2956,7 +2956,7 @@ void Score::collectMatch(void* data, Element* e)
             return;
 
       if ((p->staffStart != -1)
-         && ((p->staffStart > e->staffIdx()) || (p->staffEnd <= e->staffIdx())))
+          && ((p->staffStart > e->staffIdx()) || (p->staffEnd <= e->staffIdx())))
             return;
 
       if (p->voice != -1 && p->voice != e->voice())
@@ -2999,7 +2999,7 @@ void Score::collectNoteMatch(void* data, Element* e)
       if (p->duration.type() != TDuration::DurationType::V_INVALID && p->duration != n->chord()->actualDurationType())
             return;
       if ((p->staffStart != -1)
-         && ((p->staffStart > e->staffIdx()) || (p->staffEnd <= e->staffIdx())))
+          && ((p->staffStart > e->staffIdx()) || (p->staffEnd <= e->staffIdx())))
             return;
       if (p->voice != -1 && p->voice != e->voice())
             return;
@@ -3140,8 +3140,8 @@ void Score::lassoSelectEnd()
             }
       if (noteRestCount > 0) {
             endSegment = endCR->nextSegmentAfterCR(SegmentType::ChordRest
-               | SegmentType::EndBarLine
-               | SegmentType::Clef);
+                                                   | SegmentType::EndBarLine
+                                                   | SegmentType::Clef);
             _selection.setRange(startSegment, endSegment, startStaff, endStaff+1);
             if (!_selection.isRange())
                   _selection.setState(SelState::RANGE);
@@ -3162,7 +3162,7 @@ void Score::addLyrics(int tick, int staffIdx, const QString& txt)
       Segment* seg     = measure->findSegment(SegmentType::ChordRest, tick);
       if (seg == 0) {
             qDebug("no segment found for lyrics<%s> at tick %d",
-               qPrintable(txt), tick);
+                   qPrintable(txt), tick);
             return;
             }
 
@@ -3175,13 +3175,14 @@ void Score::addLyrics(int tick, int staffIdx, const QString& txt)
                   l->setXmlText(txt);
                   l->setTrack(track);
                   cr->add(l);
+                  lastAddedLyric = l;
                   lyricsAdded = true;
                   break;
                   }
             }
       if (!lyricsAdded) {
             qDebug("no chord/rest for lyrics<%s> at tick %d, staff %d",
-               qPrintable(txt), tick, staffIdx);
+                   qPrintable(txt), tick, staffIdx);
             }
       }
 
@@ -3854,7 +3855,10 @@ QString Score::extractLyrics()
                                     result += lyric + " ";
                               else if (l->syllabic() == Lyrics::Syllabic::BEGIN || l->syllabic() == Lyrics::Syllabic::MIDDLE)
                                     result += lyric;
+                              if(l->isEndOfLine())
+                                    result+="\n";
                               }
+
                         m->setPlaybackCount(m->playbackCount() + 1);
                         if (m->tick() + m->ticks() >= endTick)
                               break;
@@ -3883,6 +3887,8 @@ QString Score::extractLyrics()
                                           result += lyric + " ";
                                     else if (l->syllabic() == Lyrics::Syllabic::BEGIN || l->syllabic() == Lyrics:: Syllabic::MIDDLE)
                                           result += lyric;
+                                    if(l->isEndOfLine())
+                                          result+="\n";
                                     }
                               }
                         }
@@ -3899,67 +3905,67 @@ QString Score::extractLyrics()
 
 void Score::appendLyrics(QStringList s)
       {
-        int index = 0;
-        SegmentType st = SegmentType::ChordRest;
+      int index = 0;
+      SegmentType st = SegmentType::ChordRest;
 
-        for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
+      for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
             for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
-                ChordRest* cr = toChordRest(seg->element(0));
-                std::vector<Lyrics*>& lyric2 = cr->lyrics();
-                for(Lyrics* l2: lyric2){
-                   deleteItem(l2);
-                }
-//                cr->clearLyrics();
+                  ChordRest* cr = toChordRest(seg->element(0));
+                  std::vector<Lyrics*>& lyric2 = cr->lyrics();
+                  for(Lyrics* l2: lyric2){
+                        deleteItem(l2);
+                        }
+                  }
             }
-        }
-        for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
+
+      for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
             for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
-                ChordRest* cr = toChordRest(seg->element(0));
-                if(cr){
-                    if(index < s.length()){
-                        QString word = s.at(index);
+                  ChordRest* cr = toChordRest(seg->element(0));
+                  if(cr && cr->type() == Ms::ElementType::CHORD){
+                        if(index < s.length()){
+                              QString word = s.at(index);
 
-                        if(word[1] == "w")
-                            addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
-//                            lastAddedLyric->setSep();
+                              if(word=="#n" && index+1 < s.length()){
+                                    word = s.at(++index);
+                                    lastAddedLyric->setEndOfLine();
+                                    }
 
-                        if(word == "#s"){           //skip char
-                            index++;
-                            continue;
+                              if(word[1] == "w")
+                                    addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
+
+                              if(word[1] == "s"){
+                                    addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
+                                    if(index+1 < s.length() && s.at(index+1)[1] == "s")
+                                          lastAddedLyric->setSyllabic(Lyrics::Syllabic::BEGIN);
+                                    }
+
+                              if(word == "#S"){           //skip char
+                                    index++;
+                                    continue;
+                                    }
+
+                              if(word[1] == "m"){
+                                    int count = word.count("_");
+                                    int tick = 0;
+
+                                    tick += seg->ticks();
+                                    Segment* nextSegment = seg;
+                                    while ((nextSegment = nextSegment->next1(SegmentType::ChordRest))) {
+                                          if (count == 1)
+                                                break;
+                                          count--;
+                                          tick += nextSegment->ticks();
+                                          }
+
+                                    lastAddedLyric->setTicks(tick);
+                                    }
+                              index++;
+                              }
+                        //                    update();
                         }
-
-                        if(word == "#n"){           //new line char logic to be implemented
-                            index++;
-                            continue;
-                        }
-
-
-                        if(word[1] == "m"){
-                            int count = word.count("_");
-                            int tick = 0;
-
-                            tick += seg->ticks();
-                            Segment* temp_seg = seg;
-                            while(count > 1){
-                                Segment* next = temp_seg->next(st);
-                                qDebug() << temp_seg->ticks();
-                                tick += temp_seg->ticks();
-                                temp_seg = next;
-                                count--;
-                            }
-
-                            qDebug() << tick;
-                            qDebug() << lastAddedLyric->ticks();
-                            lastAddedLyric->setTicks(tick);
-
-                        }
-                        index++;
-                    }
-//                    update();
-                }
+                  }
             }
-        }
-        update();       //updating lyrics on score
+      update();       //updating lyrics on score
       }
 
 //---------------------------------------------------------
@@ -4329,7 +4335,7 @@ void Score::setStyle(const MStyle& s)
 //---------------------------------------------------------
 
 MasterScore::MasterScore()
-   : Score()
+      : Score()
       {
       _tempomap    = new TempoMap;
       _sigmap      = new TimeSigMap();
@@ -4361,7 +4367,7 @@ MasterScore::MasterScore()
       }
 
 MasterScore::MasterScore(const MStyle& s)
-   : MasterScore{}
+      : MasterScore{}
       {
       _movements = new Movements;
       _movements->push_back(this);
@@ -4518,7 +4524,7 @@ bool Score::isTopScore() const
 //---------------------------------------------------------
 
 Movements::Movements()
-   : std::vector<MasterScore*>()
+      : std::vector<MasterScore*>()
       {
       _undo = new UndoStack();
       }

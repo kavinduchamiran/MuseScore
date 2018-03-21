@@ -348,6 +348,7 @@ void ScoreView::lyricsMinus()
 void ScoreView::lyricsUnderscore()
       {
       Lyrics* lyrics   = toLyrics(editData.element);
+      qDebug() << lyrics;
       int track        = lyrics->track();
       Segment* segment = lyrics->segment();
       int verse        = lyrics->no();

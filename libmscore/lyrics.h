@@ -68,6 +68,7 @@ class Lyrics final : public TextBase {
       Syllabic _syllabic;
       LyricsLine* _separator;
       PropertyFlags placementStyle;
+      bool _endOfLine = false;
 
    protected:
       int _no;                ///< row index
@@ -111,6 +112,8 @@ class Lyrics final : public TextBase {
 
       int ticks() const                               { return _ticks;    }
       void setTicks(int tick)                         { _ticks = tick;    }
+      void setEndOfLine()                             { _endOfLine = true; }
+      bool isEndOfLine()                              { return _endOfLine; }
       int endTick() const;
       bool isMelisma() const;
       void removeFromScore();
