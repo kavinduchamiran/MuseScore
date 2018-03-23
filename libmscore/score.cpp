@@ -3175,6 +3175,8 @@ void Score::addLyrics(int tick, int staffIdx, const QString& txt)
                   l->setXmlText(txt);
                   l->setTrack(track);
                   cr->add(l);
+
+
                   lastAddedLyric = l;
                   lyricsAdded = true;
                   break;
@@ -3905,12 +3907,14 @@ QString Score::extractLyrics()
 
 void Score::appendLyrics(QStringList s)
       {
-      int index = 0;
+      int notesCount = 0;
       SegmentType st = SegmentType::ChordRest;
 
       for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
             for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
                   ChordRest* cr = toChordRest(seg->element(0));
+                  if(cr->type() == Ms::ElementType::CHORD)
+                    notesCount++;
                   std::vector<Lyrics*>& lyric2 = cr->lyrics();
                   for(Lyrics* l2: lyric2){
                         deleteItem(l2);
@@ -3918,54 +3922,69 @@ void Score::appendLyrics(QStringList s)
                   }
             }
 
+      int index = 0;
+      int round = -1;
+      qDebug() << s;
+      start:
+      round++;
       for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
             for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
                   ChordRest* cr = toChordRest(seg->element(0));
                   if(cr && cr->type() == Ms::ElementType::CHORD){
                         if(index < s.length()){
-                              QString word = s.at(index);
+                            QString word = s.at(index);
 
-                              if(word=="#n" && index+1 < s.length()){
-                                    word = s.at(++index);
-                                    lastAddedLyric->setEndOfLine();
-                                    }
+                            if(word=="#n" && index+1 < s.length()){
+                                  word = s.at(++index);
+                                  lastAddedLyric->setEndOfLine();
+                                  }
 
-                              if(word[1] == "w")
-                                    addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
+                            if(word[1] == "w")
+                                  addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
+                                  lastAddedLyric->setNo(round);
 
-                              if(word[1] == "s"){
-                                    addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
-                                    if(index+1 < s.length() && s.at(index+1)[1] == "s")
-                                          lastAddedLyric->setSyllabic(Lyrics::Syllabic::BEGIN);
-                                    }
+                            if(word[1] == "s"){
+                                  addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
+                                  lastAddedLyric->setNo(round);
+                                  if(index+1 < s.length() && s.at(index+1)[1] == "s")
+                                        lastAddedLyric->setSyllabic(Lyrics::Syllabic::BEGIN);
+                                  }
 
-                              if(word == "#S"){           //skip char
-                                    index++;
-                                    continue;
-                                    }
+                            if(word == "#S"){           //skip char
+                                  index++;
+                                  continue;
+                                  }
 
-                              if(word[1] == "m"){
-                                    int count = word.count("_");
-                                    int tick = 0;
+                            if(word[1] == "m"){
+                                  int count = word.count("_");
+                                  int tick = 0;
 
-                                    tick += seg->ticks();
-                                    Segment* nextSegment = seg;
-                                    while ((nextSegment = nextSegment->next1(SegmentType::ChordRest))) {
-                                          if (count == 1)
-                                                break;
-                                          count--;
-                                          tick += nextSegment->ticks();
-                                          }
+                                  tick += seg->ticks();
+                                  Segment* nextSegment = seg;
+                                  while ((nextSegment = nextSegment->next1(SegmentType::ChordRest))) {
+                                        if (count == 1)
+                                              break;
+                                        count--;
+                                        tick += nextSegment->ticks();
+                                        }
 
-                                    lastAddedLyric->setTicks(tick);
-                                    }
-                              index++;
-                              }
-                        //                    update();
+                                  lastAddedLyric->setTicks(tick);
+                                  }
+                            index++;
                         }
+                        update();
+                        qDebug() << "updated";
+                    }else if (cr->type() == Ms::ElementType::REST){// && (s.count("#w") + s.count("#m") + s.count("#s")) > notesCount){
+                      qDebug() << "here";
+                      if(index >= s.size())
+                        return;
+
+                      goto start;
+                    }
                   }
+
             }
-      update();       //updating lyrics on score
+     //updating lyrics on score
       }
 
 //---------------------------------------------------------

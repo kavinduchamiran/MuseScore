@@ -1708,6 +1708,8 @@ void MuseScore::updateLyricsScore()
             //need seperate logic for normal mode. this is for rhythm mode
             // add indicator for new line + new stave
             QString lyrics = _lyricsEditor->getLyrics();
+            if(lyrics.isNull())
+              return;
             //            qDebug() << lyrics;
             //            if(lyrics.count("[") == lyrics.count("]")){         //lyrics sections mode
 
