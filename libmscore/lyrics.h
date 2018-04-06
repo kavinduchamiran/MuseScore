@@ -102,6 +102,7 @@ class Lyrics final : public TextBase {
       virtual int subtype() const override            { return _no; }
       virtual QString subtypeName() const override    { return QObject::tr("Verse %1").arg(_no + 1); }
       void setNo(int n);
+      int getNo();
       int no() const                                  { return _no; }
       bool isEven() const                             { return _no % 1; }
       void setSyllabic(Syllabic s)                    { _syllabic = s; }

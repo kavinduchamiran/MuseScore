@@ -3175,8 +3175,7 @@ void Score::addLyrics(int tick, int staffIdx, const QString& txt)
                   l->setXmlText(txt);
                   l->setTrack(track);
                   cr->add(l);
-
-
+                  l->setNo(l->getNo());
                   lastAddedLyric = l;
                   lyricsAdded = true;
                   break;
@@ -3907,26 +3906,22 @@ QString Score::extractLyrics()
 
 void Score::appendLyrics(QStringList s)
       {
-      int notesCount = 0;
+      qDebug() << s;
       SegmentType st = SegmentType::ChordRest;
 
       for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
             for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
                   ChordRest* cr = toChordRest(seg->element(0));
-                  if(cr->type() == Ms::ElementType::CHORD)
-                    notesCount++;
-                  std::vector<Lyrics*>& lyric2 = cr->lyrics();
-                  for(Lyrics* l2: lyric2){
+                  for(Lyrics* l2: cr->lyrics()){
                         deleteItem(l2);
                         }
+                  cr->lyrics().clear();
                   }
             }
 
       int index = 0;
-      int round = -1;
-      qDebug() << s;
+
       start:
-      round++;
       for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {
             for (Segment* seg = m->first(st); seg; seg = seg->next(st)) {
                   ChordRest* cr = toChordRest(seg->element(0));
@@ -3941,13 +3936,11 @@ void Score::appendLyrics(QStringList s)
 
                             if(word[1] == "w")
                                   addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
-                                  lastAddedLyric->setNo(round);
 
                             if(word[1] == "s"){
                                   addLyrics(cr->tick(), cr->staffIdx(), word.mid(2));
-                                  lastAddedLyric->setNo(round);
                                   if(index+1 < s.length() && s.at(index+1)[1] == "s")
-                                        lastAddedLyric->setSyllabic(Lyrics::Syllabic::BEGIN);
+                                        lastAddedLyric->setSyllabic(Lyrics::Syllabic::MIDDLE);  //check for syllable bolding bug
                                   }
 
                             if(word == "#S"){           //skip char
@@ -3972,19 +3965,19 @@ void Score::appendLyrics(QStringList s)
                                   }
                             index++;
                         }
-                        update();
-                        qDebug() << "updated";
+
                     }else if (cr->type() == Ms::ElementType::REST){// && (s.count("#w") + s.count("#m") + s.count("#s")) > notesCount){
-                      qDebug() << "here";
-                      if(index >= s.size())
-                        return;
+                      if(index >= s.size() || index == 0)
+                        goto end;
 
                       goto start;
                     }
                   }
 
             }
-     //updating lyrics on score
+
+      end:
+      update();  //updating lyrics on score
       }
 
 //---------------------------------------------------------

@@ -54,6 +54,7 @@ const char* tests[] = {
       "importmidi/tst_importmidi",
       "libmscore/selectionrangedelete/tst_selectionrangedelete",
       "libmscore/parts/tst_parts",
+      "mscore/lyricseditor/tst_lyricseditor"
 #endif
 #if 0
       "libmscore/spanners/tst_spanners",              // FAIL
@@ -76,7 +77,9 @@ const char* tests[] = {
 #ifdef OMR
       "omr/notes/tst_notes",
 #endif
-      };
+
+
+};
 
 //---------------------------------------------------------
 //   process

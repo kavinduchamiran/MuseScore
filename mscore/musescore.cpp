@@ -1705,28 +1705,58 @@ void MuseScore::updateLyricsScore()
             return;
 
       if (cs){
-            //need seperate logic for normal mode. this is for rhythm mode
-            // add indicator for new line + new stave
             QString lyrics = _lyricsEditor->getLyrics();
             if(lyrics.isNull())
               return;
-            //            qDebug() << lyrics;
-            //            if(lyrics.count("[") == lyrics.count("]")){         //lyrics sections mode
 
-            //            }
+//            qDebug() << "lyr " << lyrics;
+            QMap<QString, QString> duplications;
 
-            //            QRegExp rx ("(\\[)([a-zA-Z]+)(\\])"); //[a-zA-Z]+
-            //            qDebug() << rx.patternSyntax();
-            //            qDebug() << rx.exactMatch(lyrics);
-            //            qDebug() << rx.matchedLength();
-            //            return;
+            QRegExp singleLine ("([A-Z0-9]+)(:)([a-zA-Z0-9_\\-\\[\\]\\s]+)(\n)");      //CAPITAL WORDS FOLLOWED BY : FOLLOWED BY WORDS|SPACE|-|_|[|] FOLLOWED BY NEWLINE
+            QRegExp multiLine ("([A-Z0-9]+)(:)(\n)([a-zA-Z0-9_\\-\\[\\]\\s\n]+)(\n\n)");     //CAPITAL WORDS FOLLOWED BY : FOLLOWED BY NEWLINE FOLLOWED BY WORDS|SPACE|-|_|[|]|NEWLINE FOLLOWED BY NEWLINE
 
-            QStringList str  = lyrics.split(QRegExp("\n"));
+            int pos = 0;
+            while ((pos = singleLine.indexIn(lyrics, pos)) != -1) {
+                pos += singleLine.matchedLength();
+                QString key = singleLine.cap(1);
+                QString value = singleLine.cap(3).split("\n")[0];
+                if(!key.isNull() && !value.isNull())
+                  duplications[key] = value;
+            }
 
-            //            QHash<QString, QStringList*> map;
+            pos = 0;
+            while ((pos = multiLine.indexIn(lyrics, pos)) != -1) {
+                pos += multiLine.matchedLength();
+                QString key =  multiLine.cap(1);
+                QString value = multiLine.cap(4).split("\n\n")[0];
+                if(!key.isNull() && !value.isNull())
+                  duplications[key] = value;
+            }
 
-            //            QStringList duplications;
+            for(QString key: duplications.keys()){
+//                int start = 0;
+//                while(lyrics.indexOf(key,start) != -1){
+//                    lyrics.replace(start, key.length(), "");    //same variable won't be used twice so replace function will work sufficiently
+//                    start += key.length();
+//                  }
+                lyrics.replace(key + ":", "");
+              }
 
+            QRegExp duplicationRef ("(\\[)([A-Z0-9]+)(\\])");      // "[" FOLLOWED BY CAPITAL WORDS FOLLOWED BY "]"
+
+            pos = 0;
+            while ((pos = duplicationRef.indexIn(lyrics, pos)) != -1) {
+                int length = duplicationRef.matchedLength();
+                QString key = duplicationRef.cap(2);
+                if(duplications.contains(key))
+                  lyrics.replace("[" + key + "]", duplications[key]);
+                pos += length;
+            }
+
+            qDebug() << lyrics;
+
+            QStringList str  = lyrics.split(QRegExp("\n"), QString::SkipEmptyParts);
+             qDebug() << str;
             for(QString s: str){
                   if(!s.trimmed().isNull()){
                         QStringList words = s.split(QRegExp("\\s+"), QString::SkipEmptyParts);
@@ -1734,11 +1764,7 @@ void MuseScore::updateLyricsScore()
                               if(word.contains("-")){
                                     QStringList list = word.split("-");
                                     for(QString tmp: list)
-                                          //                                if(tmp!=list.last()){
-                                          //                                    lyricsSplited.append("#w" + tmp + "-");   // #w is the starting charactor for words
-                                          //                                }else{
                                           lyricsSplited.append("#s" + tmp);
-                                    //                                }
                                     continue;
                                     }
 

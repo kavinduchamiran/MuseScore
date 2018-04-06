@@ -203,6 +203,8 @@ subdirs (
         zerberus/opcodeparse
         zerberus/inputControls
         zerberus/loop
+
+        mscore/lyricseditor
         )
 
 
