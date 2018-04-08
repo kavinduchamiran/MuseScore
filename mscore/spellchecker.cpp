@@ -1,26 +1,48 @@
 #include "spellchecker.h"
-#include "ui_spellchecker.h"
+#include <QFile>
+#include <QTextStream>
+#include <QStringList>
+#include <QDebug>
 
-SpellChecker::SpellChecker(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SpellChecker)
+#include "hunspell/1.6.2/src/hunspell/hunspell.hxx"
+
+SpellChecker::SpellChecker(const QString &dictionaryPath, const QString &userDictionary)
 {
-    ui->setupUi(this);
-
-    QStandardItemModel *model = new QStandardItemModel(2,3,this); //2 Rows and 3 Columns
-    model->setHorizontalHeaderItem(0, new QStandardItem(QString("Column1 Header")));
-    model->setHorizontalHeaderItem(1, new QStandardItem(QString("Column2 Header")));
-    model->setHorizontalHeaderItem(2, new QStandardItem(QString("Column3 Header")));
-
-
-
-    QStandardItem *firstRow = new QStandardItem(QString("ColumnValue"));
-    model->setItem(0,0,firstRow);
-
-    ui->tblWords->setModel(model);
+  Hunspell * h = new Hunspell("A", "B");
 }
+
 
 SpellChecker::~SpellChecker()
 {
-    delete ui;
+
+}
+
+
+bool SpellChecker::spell(const QString &word)
+{
+
+}
+
+
+QStringList SpellChecker::suggest(const QString &word)
+{
+
+}
+
+
+void SpellChecker::ignoreWord(const QString &word)
+{
+
+}
+
+
+void SpellChecker::put_word(const QString &word)
+{
+
+}
+
+
+void SpellChecker::addToUserWordlist(const QString &word)
+{
+
 }

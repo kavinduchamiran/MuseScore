@@ -46,7 +46,7 @@ QT5_WRAP_UI (ui_headers
       editpitch.ui editstringdata.ui editraster.ui mediadialog.ui albummanager.ui layer.ui
       omrpanel.ui masterpalette.ui harmonyedit.ui pathlistdialog.ui
       note_groups.ui resourceManager.ui stafftypetemplates.ui
-      startcenter.ui scorePreview.ui scoreBrowser.ui lyricseditor.ui spellchecker.ui
+      startcenter.ui scorePreview.ui scoreBrowser.ui lyricseditor.ui
       logindialog.ui uploadscoredialog.ui breaksdialog.ui
       toolbarEditor.ui
 
