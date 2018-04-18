@@ -42,7 +42,7 @@ LyricsEditor::LyricsEditor(MuseScore* parent)
       le.setupUi(sa);
 
       // connecting editor to updateLyricsScore()
-      connect(le.txtRhythm, SIGNAL(textChanged()), parent, SLOT(updateLyricsScore()));
+      connect(le.txtRhythm, SIGNAL(textChanged()), this, SLOT(updateee()));//updateLyricsScore
 
       connect(le.radNormal, SIGNAL(clicked()), this, SLOT(setNormal()));
       connect(le.radRhythm, SIGNAL(clicked()), this, SLOT(setRhythm()));
@@ -51,8 +51,9 @@ LyricsEditor::LyricsEditor(MuseScore* parent)
       connect(le.btnCheckSpell, SIGNAL(clicked()), this, SLOT(checkSpellings()));
 
       connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(responseReceived(QNetworkReply*)));
-      connect(le.txtNormal, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customTextEditMenu(QPoint)));
+      connect(le.txtRhythm, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customTextEditMenu(QPoint)));
 
+      highlighter = new SpellingHighlighter(le.txtRhythm);
       connectToDictionary();        //loading dictionary
       }
 
@@ -75,9 +76,26 @@ void Ms::LyricsEditor::setRhythm(){
     le.txtRhythm->show();
 }
 
+void Ms::LyricsEditor::replaceWord(){
+  QAction *act = qobject_cast<QAction *>(sender());
+  QVariant v = act->data();
+  QString replacement = act->text();
+  QPoint pos = v.toPoint();
+  QTextCursor cursor = le.txtRhythm->cursorForPosition(pos);   // replacement logic
+  cursor.select(QTextCursor::WordUnderCursor);
+  cursor.removeSelectedText();
+  cursor.insertText(replacement);
+}
+
+void Ms::LyricsEditor::updateee(){
+  qDebug() << "called";
+  highlighter->setWordlist(wordlist);
+  highlighter->highlightBlock(le.txtRhythm->toPlainText());
+}
+
 void Ms::LyricsEditor::batchHyphenate(){
     if(le.radNormal->isChecked()){
-        QString lyrics = le.txtNormal->toPlainText();
+        QString lyrics = le.txtRhythm->toPlainText();
         QString finalStr;
 
         QStringList str  = lyrics.split(QRegExp("\n"));
@@ -110,53 +128,41 @@ void Ms::LyricsEditor::batchHyphenate(){
 }
 
 void Ms::LyricsEditor::checkSpellings(){
-//    SpellChecker sp(this);
-//    sp.setModal(true);
-//    sp.exec();
-
-//    getBingServer("schoool");
-
-
+//    le.radNormal->animateClick();
+    getBingServer(le.txtRhythm->toPlainText());
+    highlighter->setWordlist(wordlist);
+    highlighter->highlightBlock(le.txtRhythm->toPlainText());
+    le.txtRhythm->setText(le.txtRhythm->toPlainText() + "");
 }
 
 void Ms::LyricsEditor::customTextEditMenu(QPoint pos)
 {
-    /* Create an object context menu */
     QMenu* menu = new QMenu();
-    /* Create actions to the context menu */
 
-//    QTextCursor tc1 =
-//    int i = tc1.position();
-    QTextCursor tc = le.txtNormal->cursorForPosition(pos);
+    QTextCursor tc = le.txtRhythm->cursorForPosition(pos);
     tc.select(QTextCursor::WordUnderCursor);
 
-    qDebug() << tc.selectedText();
-    getBingServer(tc.selectedText());
+    QString selectedWord = tc.selectedText();
+    selectedWord.replace("-", "");
+    selectedWord.replace("_", "");
 
+    qDebug() << selectedWord;
 
-//    QAction * editDevice = new QAction(trUtf8("kkk"), this);
-//    QAction * deleteDevice = new QAction(trUtf8("jjj"), this);
-
-    /* Connect slot handlers for Action pop-up menu */
-//    connect(editDevice, SIGNAL(triggered()), this, SLOT(slotEditRecord()));     // Call Handler dialog editing
-//    connect(deleteDevice, SIGNAL(triggered()), this, SLOT(slotRemoveRecord())); // Handler delete records
-//    connect(ui.saveAction, SIGNAL(triggered()), this, SLOT(saveNew()));
-    /* Set the actions to the menu */
-
-//    menu->addAction(editDevice);
-//    menu->addAction(deleteDevice);
-
-    for(QString word: wordlist)
-        menu->addAction(new QAction(word, this));
+    for(QString word: wordlist[selectedWord]){
+        QAction* action = new QAction(word, this);
+        action->setData(pos);
+        connect(action, SIGNAL(triggered()), this, SLOT(replaceWord()));
+        menu->addAction(action);
+      }
 
     menu->addSeparator();
 
-    foreach (QAction *action, le.txtNormal->createStandardContextMenu()->actions()) {
+    foreach (QAction *action, le.txtRhythm->createStandardContextMenu()->actions()) {
         menu->addAction(action);
     }
 
     /* Call the context menu */
-    menu->popup(le.txtNormal->viewport()->mapToGlobal(pos));
+    menu->popup(le.txtRhythm->viewport()->mapToGlobal(pos));
 }
 
 
@@ -200,7 +206,7 @@ void Ms::LyricsEditor::getBingServer(QString word){
     if(word.isNull())
         return;
 
-    qDebug() << word;
+    word.replace("\n", " ");
 
     QString mkt = "en-US";
     QString mode = "proof";
@@ -217,14 +223,13 @@ void Ms::LyricsEditor::getBingServer(QString word){
 
     QNetworkRequest request(url);
 
-    request.setRawHeader("Ocp-Apim-Subscription-Key", "1c228399f957411ba733747b604a2cad");
+    request.setRawHeader("Ocp-Apim-Subscription-Key", "29d375a6ade243cea87a657ff045180a");
 
     nam->get(request);
 }
 
 void Ms::LyricsEditor::responseReceived(QNetworkReply *reply){
     wordlist.clear();
-
     if (reply->error()) {
         qDebug() << reply->errorString();
         return;
@@ -235,24 +240,20 @@ void Ms::LyricsEditor::responseReceived(QNetworkReply *reply){
 
     QJsonObject jsonObject = doc.object();
     QJsonArray jsonArray = jsonObject["flaggedTokens"].toArray();
-//                return jsonObject["flaggedTokens"].toArray();
-
 
     foreach (const QJsonValue & value, jsonArray) {
-        QJsonObject obj = value.toObject();
-//                    propertyNames.append(obj["PropertyName"].toString());
-//                    propertyKeys.append(obj["key"].toString());
-//        qDebug() << obj["token"].toString();
+        QStringList suggestions;
 
+        QJsonObject obj = value.toObject();
+        QString word = obj["token"].toString();
         QJsonArray jsonArray2 = obj["suggestions"].toArray();
         foreach (const QJsonValue & value2, jsonArray2) {
             QJsonObject obj2 = value2.toObject();
-//            qDebug() << obj2["suggestion"].toString();
-            wordlist.append(obj2["suggestion"].toString());
-//            qDebug() << QString::number(obj2["score"].toDouble());
+            suggestions.append(obj2["suggestion"].toString());
         }
-
+        wordlist[word] = suggestions;
     }
 
+    highlighter->setWordlist(wordlist);
     qDebug() << wordlist;
 }

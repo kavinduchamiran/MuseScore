@@ -4,11 +4,11 @@
 #include <QStringList>
 #include <QDebug>
 
-#include "hunspell/1.6.2/src/hunspell/hunspell.hxx"
+#include "thirdparty/hunspell/1.6.2/src/hunspell/hunspell.hxx"
 
 SpellChecker::SpellChecker(const QString &dictionaryPath, const QString &userDictionary)
 {
-  Hunspell * h = new Hunspell("A", "B");
+
 }
 
 

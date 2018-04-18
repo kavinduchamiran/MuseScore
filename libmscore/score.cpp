@@ -3906,7 +3906,7 @@ QString Score::extractLyrics()
 
 void Score::appendLyrics(QStringList s)
       {
-      qDebug() << s;
+//      qDebug() << s;
       SegmentType st = SegmentType::ChordRest;
 
       for (Measure* m = firstMeasure(); m; m = m->nextMeasure()) {

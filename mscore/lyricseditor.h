@@ -6,6 +6,7 @@
 #include "musescore.h"
 
 #include "spellchecker.h"
+#include "spellinghighlighter.h"
 
 #include <QtSql/QtSql>
 #include <QtSql/QSqlDatabase>
@@ -29,7 +30,9 @@ class LyricsEditor : public QDockWidget {
       Ui::LyricsEditor le;
       QSqlDatabase db;
       QNetworkAccessManager* nam = new QNetworkAccessManager(this);
-      QStringList wordlist;
+//      SpellingHighlighter* highlighter = new SpellingHighlighter(le.txtNormal);
+      SpellingHighlighter* highlighter;
+      QMap<QString, QStringList> wordlist;
 
    public:
       LyricsEditor(MuseScore* parent);
@@ -47,6 +50,8 @@ public slots:
       void setRhythm();
       void batchHyphenate();
       void checkSpellings();
+      void replaceWord();
+      void updateee();
       void responseReceived(QNetworkReply *reply);
       void customTextEditMenu(QPoint pos);
 };

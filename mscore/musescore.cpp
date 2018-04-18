@@ -1753,10 +1753,10 @@ void MuseScore::updateLyricsScore()
                 pos += length;
             }
 
-            qDebug() << lyrics;
+//            qDebug() << lyrics;
 
             QStringList str  = lyrics.split(QRegExp("\n"), QString::SkipEmptyParts);
-             qDebug() << str;
+
             for(QString s: str){
                   if(!s.trimmed().isNull()){
                         QStringList words = s.split(QRegExp("\\s+"), QString::SkipEmptyParts);
